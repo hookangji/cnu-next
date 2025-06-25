@@ -25,3 +25,9 @@ export async function GET(request: Request) {
   const data = await res.json();
   return NextResponse.json(data);
 }
+
+// 변경 전
+//  GET 요청 처리
+
+// 변경 후
+//  GET 요청 처리 (재제출용)
