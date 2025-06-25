@@ -4,10 +4,10 @@ import { ProductItem } from "@/types/Product";
 interface Props {
   cart: { [productId: string]: number };
   products: ProductItem[];
-  onRemove: (productId: string) => void; // 삭제 핸들러 추가
+  onRemoveAction: (productId: string) => void; // renamed
 }
 
-export default function CartList({ cart, products, onRemove }: Props) {
+export default function CartList({ cart, products, onRemoveAction }: Props) {
   const cartItems = Object.entries(cart)
     .map(([id, quantity]) => {
       const product = products.find((p) => p.productId === id);
@@ -21,7 +21,45 @@ export default function CartList({ cart, products, onRemove }: Props) {
   );
 
   // 2.4 결제하기: "결제하기" 버튼을 클릭하면, 현재 장바구니에 담긴 상품을 확인해 **localStorage**에 저장 후, 결제완료(/checkout) 페이지로 이동한다.
-  const handleCheckout = () => {};
+  const handleCheckout = () => {
+    const checkoutItems = cartItems.map(
+      ({
+        productId,
+        title,
+        lprice,
+        quantity,
+        link,
+        image,
+        hprice,
+        mallName,
+        productType,
+        brand,
+        maker,
+        category1,
+        category2,
+        category3,
+        category4,
+      }) => ({
+        productId,
+        title,
+        lprice,
+        quantity,
+        link,
+        image,
+        hprice,
+        mallName,
+        productType,
+        brand,
+        maker,
+        category1,
+        category2,
+        category3,
+        category4,
+      })
+    );
+      localStorage.setItem("checkoutItems", JSON.stringify(checkoutItems));
+      window.location.href = "/checkout";
+  };
 
   return (
     <div className="p-4 bg-white rounded shadow mt-6">
@@ -44,7 +82,7 @@ export default function CartList({ cart, products, onRemove }: Props) {
                   {(Number(item.lprice) * item.quantity).toLocaleString()}원
                 </p>
                 <button
-                  onClick={() => onRemove(item.productId)}
+                  onClick={() => onRemoveAction(item.productId)}
                   className="text-sm text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600"
                 >
                   삭제

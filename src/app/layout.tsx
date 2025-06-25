@@ -1,3 +1,6 @@
+import { UserProvider } from "@/context/UserContext";
+import Header from "@/component/layout/Header";
+import Footer from "@/component/layout/Footer";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -24,10 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <UserProvider>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </UserProvider>
       </body>
     </html>
   );

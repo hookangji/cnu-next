@@ -1,40 +1,33 @@
 "use client";
-// query(쿼리), result(검색결과)
 
-import { createContext, ReactNode, useContext, useState } from "react";
-import { ProductItem } from "../types/Product";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { ProductItem } from "@/types/Product"; // 타입은 뒤에 만들자
 
-//  1. SearchContextType
 interface SearchContextType {
   query: string;
   setQuery: (q: string) => void;
-  result: ProductItem[]; //  타입 지정 예정
+  result: ProductItem[];
   setResult: (r: ProductItem[]) => void;
+  cart: { [productId: string]: number };
+  setCart: (c: { [productId: string]: number }) => void;
 }
 
-/*  과제 수행 시, 초기 파일은 git에 공유 예정 */
-
-// 2. createContext
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
-// 3. SearchProvider
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<ProductItem[]>([]);
+  const [cart, setCart] = useState<{ [productId: string]: number }>({});
+
   return (
-    <SearchContext.Provider value={{ query, setQuery, result, setResult }}>
-      {children}
-    </SearchContext.Provider>
+      <SearchContext.Provider value={{ query, setQuery, result, setResult, cart, setCart }}>
+        {children}
+      </SearchContext.Provider>
   );
 };
 
-//  4. useSearch custom Hook
 export const useSearch = () => {
   const context = useContext(SearchContext);
-
-  if (!context) {
-    throw new Error("useSearch Error");
-  }
-
+  if (!context) throw new Error("useSearch must be used within SearchProvider");
   return context;
 };

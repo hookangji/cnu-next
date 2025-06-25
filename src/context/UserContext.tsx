@@ -1,41 +1,43 @@
 "use client";
-import { createContext, ReactNode, useContext, useState } from "react";
 
-// 과제 1.1 UserContext 구현
+import { createContext, useContext, useState, ReactNode } from "react";
 
-// User
+// 유저 타입 정의
 interface User {
-  name: string;
-  // age: number
-  // 추가하고 싶은 속성들 ...
+  userId: string;
+  age: number;
+  phoneNumber: string;
 }
-// UserContextType
+
+// context에서 사용할 타입
 interface UserContextType {
   user: User;
   setUser: (user: User) => void;
 }
 
-//  1. createContext
-export const UserContext = createContext<UserContextType | undefined>(
-  undefined
-);
+// context 생성
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
-// 2. Provider 생성
+// provider 정의
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>({ name: "" });
+  const [user, setUser] = useState<User>({
+    userId: "cnu2025",
+    age: 21,
+    phoneNumber: "010-1234-5678",
+  });
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={{ user, setUser }}>
+        {children}
+      </UserContext.Provider>
   );
 };
 
-// 3. user 정보를 사용하기 위한 custom hook
+// 커스텀 훅
 export const useUser = () => {
   const context = useContext(UserContext);
-  // 에러처리
   if (!context) {
-    throw new Error("error");
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };
